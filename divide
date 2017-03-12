@@ -6,38 +6,44 @@ import fractions
 from math import ceil, floor, log10
 import sys
 
+
 def roundG(x, precision):
   return '{:.{}g}'.format(x, precision)
 
-try:
-  a = int(sys.argv[1])
-  b = int(sys.argv[2])
-except (IndexError, ValueError):
-  sys.exit('Must have 2 integer arguments')
 
-q = a / b
+def main():
+  try:
+    a = int(sys.argv[1])
+    b = int(sys.argv[2])
+  except (IndexError, ValueError):
+    sys.exit('Must have 2 integer arguments')
 
-print(roundG(q, ceil(log10(q)) - floor(log10(q / min(a, b)))))
+  q = a / b
 
-# Show only enough digits to be unique to the numerator.
-testA = 0
-precision = 1
-while testA != a:
-  qString = roundG(q, precision)
-  testA = round(float(qString) * b)
-  precision += 1
-print(qString)
+  print(roundG(q, ceil(log10(q)) - floor(log10(q / min(a, b)))))
 
-# Show as rational.
-print(fractions.Fraction(a, b))
+  # Show only enough digits to be unique to the numerator.
+  testA = 0
+  precision = 1
+  while testA != a:
+    qString = roundG(q, precision)
+    testA = round(float(qString) * b)
+    precision += 1
+  print(qString)
 
-# Show the simplest fraction that results in the right a when scaled up.
-testA = 0
-smallB = 0
-while testA != a:
-  smallB += 1
-  smallA = round(smallB * q)
-  testA = round(smallA * b / smallB)
-  print(testA, end=' ')
-print()
-print('{}/{}'.format(smallA, smallB))
+  # Show as rational.
+  print(fractions.Fraction(a, b))
+
+  # Show the simplest fraction that results in the right a when scaled up.
+  testA = 0
+  smallB = 0
+  while testA != a:
+    smallB += 1
+    smallA = round(smallB * q)
+    testA = round(smallA * b / smallB)
+    print(testA, end=' ')
+  print()
+  print('{}/{}'.format(smallA, smallB))
+
+
+main()
