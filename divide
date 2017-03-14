@@ -2,6 +2,7 @@
 
 # Determine precision by assuming the operands are precise down to the unit.
 
+import argparse
 import fractions
 from math import ceil, floor, log10
 import sys
@@ -11,13 +12,17 @@ def roundG(x, precision):
   return '{:.{}g}'.format(x, precision)
 
 
-def main():
-  try:
-    a = int(sys.argv[1])
-    b = int(sys.argv[2])
-  except (IndexError, ValueError):
-    sys.exit('Must have 2 integer arguments')
+ap = argparse.ArgumentParser()
+ap.add_argument('-fraction', action='store_true', help='Display fractions')
+ap.add_argument('a', type=int, help='Numerator')
+ap.add_argument('b', type=int, help='Denominator')
 
+
+def main():
+  args = ap.parse_args()
+
+  a = args.a
+  b = args.b
   q = a / b
 
   print(roundG(q, ceil(log10(q)) - floor(log10(q / min(a, b)))))
@@ -31,19 +36,20 @@ def main():
     precision += 1
   print(qString)
 
-  # Show as rational.
-  print(fractions.Fraction(a, b))
+  if args.fraction:
+    # Show as rational.
+    print(fractions.Fraction(a, b))
 
-  # Show the simplest fraction that results in the right a when scaled up.
-  testA = 0
-  smallB = 0
-  while testA != a:
-    smallB += 1
-    smallA = round(smallB * q)
-    testA = round(smallA * b / smallB)
-    print(testA, end=' ')
-  print()
-  print('{}/{}'.format(smallA, smallB))
+    # Show the simplest fraction that results in the right a when scaled up.
+    testA = 0
+    smallB = 0
+    while testA != a:
+      smallB += 1
+      smallA = round(smallB * q)
+      testA = round(smallA * b / smallB)
+      print(testA, end=' ')
+    print()
+    print('{}/{}'.format(smallA, smallB))
 
 
 main()
