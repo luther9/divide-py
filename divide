@@ -2,7 +2,7 @@
 
 # Determine precision by assuming the operands are precise down to the unit.
 
-import argparse
+from argparse import ArgumentParser
 from fractions import Fraction
 import math
 import sys
@@ -12,8 +12,7 @@ def roundG(x, precision):
     return '{:.{}g}'.format(x, precision)
 
 
-ap = argparse.ArgumentParser()
-ap.add_argument('-fraction', action='store_true', help='Display fractions')
+ap = ArgumentParser()
 ap.add_argument('a', type=int, help='Numerator')
 ap.add_argument('b', type=int, help='Denominator')
 
@@ -36,20 +35,19 @@ def main(argv):
         precision += 1
     print(qString)
 
-    if args.fraction:
-        # Show as rational.
-        print(Fraction(a, b))
+    # Show as rational.
+    print(Fraction(a, b))
 
-        # Show the simplest fraction that results in the right a when scaled up.
-        testA = 0
-        smallB = 0
-        while testA != a:
-            smallB += 1
-            smallA = round(smallB * q)
-            testA = round(smallA * b / smallB)
-            print(testA, end=' ')
-        print()
-        print('{}/{}'.format(smallA, smallB))
+    # Show the simplest fraction that results in the right a when scaled up.
+    testA = 0
+    smallB = 0
+    while testA != a:
+        smallB += 1
+        smallA = round(smallB * q)
+        testA = round(smallA * b / smallB)
+        print(testA, end=' ')
+    print()
+    print('{}/{}'.format(smallA, smallB))
 
 
 if __name__ == '__main__':
