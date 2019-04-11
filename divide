@@ -4,6 +4,7 @@
 
 from argparse import ArgumentParser
 from fractions import Fraction
+from itertools import count
 import math
 import sys
 
@@ -14,6 +15,14 @@ ap.add_argument('b', type=int, help='Denominator')
 
 def roundG(x, precision):
     return '{:.{}g}'.format(x, precision)
+
+
+def enoughDigits(a, b, q):
+    """Show only enough digits to be unique to the numerator."""
+    for precision in count(1):
+        qString = roundG(q, precision)
+        if a == round(float(qString) * b):
+            return qString
 
 
 def main(argv):
@@ -33,14 +42,7 @@ def main(argv):
     # Show as rational.
     print(Fraction(a, b))
 
-    # Show only enough digits to be unique to the numerator.
-    testA = 0
-    precision = 1
-    while testA != a:
-        qString = roundG(q, precision)
-        testA = round(float(qString) * b)
-        precision += 1
-    print(qString)
+    print(enoughDigits(a, b, q))
 
     # Show the simplest fraction that results in the right a when scaled up.
     testA = 0
