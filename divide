@@ -7,14 +7,13 @@ from fractions import Fraction
 import math
 import sys
 
-
-def roundG(x, precision):
-    return '{:.{}g}'.format(x, precision)
-
-
 ap = ArgumentParser()
 ap.add_argument('a', type=int, help='Numerator')
 ap.add_argument('b', type=int, help='Denominator')
+
+
+def roundG(x, precision):
+    return '{:.{}g}'.format(x, precision)
 
 
 def main(argv):
@@ -24,7 +23,15 @@ def main(argv):
     b = args.b
     q = a / b
 
-    print(roundG(q, math.ceil(math.log10(q)) - math.floor(math.log10(q / min(a, b)))))
+    print(
+        roundG(
+            q,
+            math.ceil(math.log10(q)) - math.floor(math.log10(q / min(a, b))),
+        ),
+    )
+
+    # Show as rational.
+    print(Fraction(a, b))
 
     # Show only enough digits to be unique to the numerator.
     testA = 0
@@ -34,9 +41,6 @@ def main(argv):
         testA = round(float(qString) * b)
         precision += 1
     print(qString)
-
-    # Show as rational.
-    print(Fraction(a, b))
 
     # Show the simplest fraction that results in the right a when scaled up.
     testA = 0
