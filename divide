@@ -3,13 +3,13 @@
 # Determine precision by assuming the operands are precise down to the unit.
 
 import argparse
-import fractions
-from math import ceil, floor, log10
+from fractions import Fraction
+import math
 import sys
 
 
 def roundG(x, precision):
-  return '{:.{}g}'.format(x, precision)
+    return '{:.{}g}'.format(x, precision)
 
 
 ap = argparse.ArgumentParser()
@@ -18,38 +18,39 @@ ap.add_argument('a', type=int, help='Numerator')
 ap.add_argument('b', type=int, help='Denominator')
 
 
-def main():
-  args = ap.parse_args()
+def main(argv):
+    args = ap.parse_args()
 
-  a = args.a
-  b = args.b
-  q = a / b
+    a = args.a
+    b = args.b
+    q = a / b
 
-  print(roundG(q, ceil(log10(q)) - floor(log10(q / min(a, b)))))
+    print(roundG(q, math.ceil(math.log10(q)) - math.floor(math.log10(q / min(a, b)))))
 
-  # Show only enough digits to be unique to the numerator.
-  testA = 0
-  precision = 1
-  while testA != a:
-    qString = roundG(q, precision)
-    testA = round(float(qString) * b)
-    precision += 1
-  print(qString)
-
-  if args.fraction:
-    # Show as rational.
-    print(fractions.Fraction(a, b))
-
-    # Show the simplest fraction that results in the right a when scaled up.
+    # Show only enough digits to be unique to the numerator.
     testA = 0
-    smallB = 0
+    precision = 1
     while testA != a:
-      smallB += 1
-      smallA = round(smallB * q)
-      testA = round(smallA * b / smallB)
-      print(testA, end=' ')
-    print()
-    print('{}/{}'.format(smallA, smallB))
+        qString = roundG(q, precision)
+        testA = round(float(qString) * b)
+        precision += 1
+    print(qString)
+
+    if args.fraction:
+        # Show as rational.
+        print(Fraction(a, b))
+
+        # Show the simplest fraction that results in the right a when scaled up.
+        testA = 0
+        smallB = 0
+        while testA != a:
+            smallB += 1
+            smallA = round(smallB * q)
+            testA = round(smallA * b / smallB)
+            print(testA, end=' ')
+        print()
+        print('{}/{}'.format(smallA, smallB))
 
 
-main()
+if __name__ == '__main__':
+    main(sys.argv[1:])
