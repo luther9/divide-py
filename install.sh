@@ -1,1 +1,1 @@
-cp -vpu divide /usr/local/bin
+cp -vpu divide ~/.local/bin/

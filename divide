@@ -9,6 +9,11 @@ import math
 import sys
 
 ap = ArgumentParser()
+ap.add_argument(
+    '-round',
+    action='store_true',
+    help='Also show approximate decimal and rational values',
+)
 ap.add_argument('a', type=int, help='Numerator')
 ap.add_argument('b', type=int, help='Denominator')
 
@@ -51,8 +56,9 @@ def main(argv):
         ),
     )
     print(Fraction(a, b))
-    print(enoughDigits(a, b, q))
-    print(loDenominator(a, b, q))
+    if args.round:
+        print(enoughDigits(a, b, q))
+        print(loDenominator(a, b, q))
 
 
 if __name__ == '__main__':
